@@ -26,20 +26,15 @@ fun ProfileScreen(navController: NavHostController, name: String, imageUri: Stri
     ) {
         Text(text = "Player: $name", style = MaterialTheme.typography.displayMedium)
 
-        Text(text = numOfColors.toString())
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Sprawdzamy, czy imageUri jest pusty lub zawiera tylko białe znaki
-        if (imageUri.isNullOrEmpty() || imageUri.trim().isEmpty()) {
-            // Jeśli brak zdjęcia, wyświetlamy domyślny obrazek (znak zapytania)
+        if (imageUri.isNullOrEmpty()) {
             Image(
                 painter = painterResource(R.drawable.ic_baseline_question_mark_24),
                 contentDescription = "Default profile photo",
                 modifier = Modifier.size(100.dp)
             )
         } else {
-            // Jeśli zdjęcie zostało wybrane, wyświetlamy to zdjęcie
             AsyncImage(
                 model = imageUri,
                 contentDescription = "Profile photo",

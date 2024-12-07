@@ -99,19 +99,15 @@ fun StartScreen(navController: NavHostController) {
         Button(
             onClick = {
                 val encodedUri = profileImageUri.value?.let { Uri.encode(it.toString()) }
-                    ?: " "
-
-                if (isNextButtonEnabled) {
-                    navController.navigate("profileScreen/${name.value}/${encodedUri}/${numOfColors.value}")
-                }
+                navController.navigate(
+                    "profileScreen/${name.value}/${numOfColors.value}" +
+                            if (encodedUri != null) "?imageUri=$encodedUri" else ""
+                )
             },
             enabled = isNextButtonEnabled
         ) {
             Text("Next")
         }
-
-
-
     }
 }
 

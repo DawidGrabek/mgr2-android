@@ -72,11 +72,11 @@ fun MyApp() {
         composable(Screen.StartScreen.path) { StartScreen(navController) }
 
         composable(
-            "profileScreen/{name}/{imageUri}/{numOfColors}",
+            "profileScreen/{name}/{numOfColors}?imageUri={imageUri}",
             arguments = listOf(
                 navArgument("name") { type = NavType.StringType },
-                navArgument("imageUri") { type = NavType.StringType },
-                navArgument("numOfColors") { type = NavType.IntType }
+                navArgument("numOfColors") { type = NavType.IntType },
+                navArgument("imageUri") { type = NavType.StringType; defaultValue = "" }
             )
         ) { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
@@ -87,7 +87,6 @@ fun MyApp() {
 
         composable(Screen.GameScreen.path) { GameScreen() }
     }
-
 }
 
 
