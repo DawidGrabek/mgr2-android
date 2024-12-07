@@ -85,7 +85,22 @@ fun MyApp() {
             ProfileScreen(navController, name, imageUri, numOfColors)
         }
 
-        composable(Screen.GameScreen.path) { GameScreen() }
+        composable(Screen.GameScreen.path) {
+            GameScreen(navController = navController)
+        }
+
+
+        composable(
+            "resultsScreen/{attemptsCount}/{isGameWon}",
+            arguments = listOf(
+                navArgument("attemptsCount") { type = NavType.IntType },
+                navArgument("isGameWon") { type = NavType.BoolType }
+            )
+        ) { backStackEntry ->
+            val attemptsCount = backStackEntry.arguments?.getInt("attemptsCount") ?: 0
+            val isGameWon = backStackEntry.arguments?.getBoolean("isGameWon") ?: false
+            ResultsScreen(navController, attemptsCount, isGameWon)
+        }
     }
 }
 

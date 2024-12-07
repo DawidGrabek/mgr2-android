@@ -7,10 +7,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import kotlin.random.Random
 
 @Composable
-fun GameScreen() {
+fun GameScreen(navController: NavHostController) {
     val availableColors = listOf(Color.Red, Color.Blue, Color.Green, Color.Magenta, Color.Yellow)
     var attempts by remember { mutableStateOf(mutableListOf<Pair<List<Color>, List<Color>>>()) }
     var selectedColors by remember { mutableStateOf(List(4) { Color.White }) }
@@ -76,8 +77,10 @@ fun GameScreen() {
         // Wyświetlenie przycisku "Zakończ grę" po ostatnim wierszu, gdy gra jest zakończona
         if (isGameFinished) {
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { /* Logika zakończenia gry */ }) {
-                Text("Zakończ grę")
+            Button(onClick = {
+                navController.navigate("resultsScreen/${attempts.size}/${feedbackColors.all { it == Color.Red }}")
+            }) {
+                Text("Finish Game")
             }
         }
     }
