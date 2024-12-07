@@ -84,13 +84,13 @@ fun StartScreen(navController: NavHostController) {
             value = numOfColors.value,
             onValueChange = {
                 numOfColors.value = it
-                numOfColorsError.value = it.toIntOrNull()?.let { num -> num !in 4..8 } ?: true
+                numOfColorsError.value = it.toIntOrNull()?.let { num -> num !in 5..9 } ?: true
             },
-            label = "Enter number of colors (4-8)",
+            label = "Enter number of colors (5-9)",
             keyboardType = KeyboardOptions(keyboardType = KeyboardType.Number),
             isError = numOfColorsError.value,
-            errorMessage = "Must be between 4 and 8",
-            validate = { it.toIntOrNull()?.let { num -> num in 4..8 } ?: false }
+            errorMessage = "Must be between 5 and 9",
+            validate = { it.toIntOrNull()?.let { num -> num in 5..9 } ?: false }
         )
 
         Spacer(modifier = Modifier.height(16.dp))

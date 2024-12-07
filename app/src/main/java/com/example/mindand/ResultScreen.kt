@@ -12,7 +12,8 @@ import androidx.navigation.NavHostController
 fun ResultsScreen(
     navController: NavHostController,
     attemptsCount: Int,
-    isGameWon: Boolean
+    isGameWon: Boolean,
+    numOfColors: Int
 ) {
     Column(
         modifier = Modifier
@@ -39,9 +40,12 @@ fun ResultsScreen(
             Button(onClick = { navController.popBackStack(Screen.StartScreen.path, inclusive = false) }) {
                 Text("Home")
             }
-            Button(onClick = { navController.navigate(Screen.GameScreen.path) }) {
+            Button(onClick = {
+                navController.navigate("gameScreen/$numOfColors")
+            }) {
                 Text("Play Again")
             }
         }
     }
 }
+

@@ -53,7 +53,9 @@ fun ProfileScreen(navController: NavHostController, name: String, imageUri: Stri
             Button(onClick = { navController.popBackStack() }) {
                 Text("Back")
             }
-            Button(onClick = { navController.navigate(Screen.GameScreen.path) }) {
+            Button(onClick = {
+                navController.navigate("gameScreen/$numOfColors")
+            }) {
                 Text("Play")
             }
         }

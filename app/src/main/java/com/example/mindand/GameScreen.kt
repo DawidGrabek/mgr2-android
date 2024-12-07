@@ -11,8 +11,19 @@ import androidx.navigation.NavHostController
 import kotlin.random.Random
 
 @Composable
-fun GameScreen(navController: NavHostController) {
-    val availableColors = listOf(Color.Red, Color.Blue, Color.Green, Color.Magenta, Color.Yellow)
+fun GameScreen(navController: NavHostController, numOfColors: Int) {
+    // Generujemy listę kolorów w oparciu o liczbę `numOfColors`
+    val baseColors = listOf(Color.Red, Color.Blue, Color.Green, Color.Magenta, Color.Yellow)
+    val availableColors by remember {
+        mutableStateOf(baseColors + List(numOfColors - baseColors.size) {
+            Color(
+                red = Random.nextFloat(),
+                green = Random.nextFloat(),
+                blue = Random.nextFloat()
+            )
+        })
+    }
+
     var attempts by remember { mutableStateOf(mutableListOf<Pair<List<Color>, List<Color>>>()) }
     var selectedColors by remember { mutableStateOf(List(4) { Color.White }) }
     var feedbackColors by remember { mutableStateOf(List(4) { Color.Gray }) }
@@ -78,13 +89,18 @@ fun GameScreen(navController: NavHostController) {
         if (isGameFinished) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
-                navController.navigate("resultsScreen/${attempts.size}/${feedbackColors.all { it == Color.Red }}")
+                navController.navigate(
+                    "resultsScreen/${attempts.size}/${feedbackColors.all { it == Color.Red }}/$numOfColors"
+                )
             }) {
                 Text("Finish Game")
             }
+
         }
     }
 }
+
+
 
 // Funkcja: Wybierz następny dostępny kolor
 fun selectNextAvailableColor(

@@ -85,22 +85,31 @@ fun MyApp() {
             ProfileScreen(navController, name, imageUri, numOfColors)
         }
 
-        composable(Screen.GameScreen.path) {
-            GameScreen(navController = navController)
+        composable(
+            "gameScreen/{numOfColors}",
+            arguments = listOf(
+                navArgument("numOfColors") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val numOfColors = backStackEntry.arguments?.getInt("numOfColors") ?: 5
+            GameScreen(navController = navController, numOfColors = numOfColors)
         }
 
 
         composable(
-            "resultsScreen/{attemptsCount}/{isGameWon}",
+            "resultsScreen/{attemptsCount}/{isGameWon}/{numOfColors}",
             arguments = listOf(
                 navArgument("attemptsCount") { type = NavType.IntType },
-                navArgument("isGameWon") { type = NavType.BoolType }
+                navArgument("isGameWon") { type = NavType.BoolType },
+                navArgument("numOfColors") { type = NavType.IntType }
             )
         ) { backStackEntry ->
             val attemptsCount = backStackEntry.arguments?.getInt("attemptsCount") ?: 0
             val isGameWon = backStackEntry.arguments?.getBoolean("isGameWon") ?: false
-            ResultsScreen(navController, attemptsCount, isGameWon)
+            val numOfColors = backStackEntry.arguments?.getInt("numOfColors") ?: 5
+            ResultsScreen(navController, attemptsCount, isGameWon, numOfColors)
         }
+
     }
 }
 
@@ -110,7 +119,7 @@ fun MyApp() {
 fun ProfileScreenInitialPreview() {
     MindAndTheme {
         val navController = rememberNavController()
-        ProfileScreen(navController = navController, name = "Dawid", imageUri = "", numOfColors = 4)
+        ProfileScreen(navController = navController, name = "Dawid", imageUri = "", numOfColors = 5)
     }
 }
 
