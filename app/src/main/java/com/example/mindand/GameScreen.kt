@@ -1,6 +1,7 @@
 package com.example.mindand
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -11,6 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
 import kotlin.random.Random
+
+import androidx.compose.animation.*
 
 @Composable
 fun GameScreen(navController: NavHostController, numOfColors: Int) {
@@ -33,6 +36,7 @@ fun GameScreen(navController: NavHostController, numOfColors: Int) {
     val correctColors by remember { mutableStateOf(selectRandomColors(availableColors)) }
     var isGameFinished by remember { mutableStateOf(false) }
     var isResetting by remember { mutableStateOf(false) }
+    var isNewRowVisible by remember { mutableStateOf(false) } // Kontrola widoczności nowego wiersza
 
     Column(
         modifier = Modifier
@@ -56,37 +60,54 @@ fun GameScreen(navController: NavHostController, numOfColors: Int) {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        // Wyświetlanie aktualnej próby
+        // Animacja dla nowego pustego wiersza
         if (!isGameFinished && !isResetting) {
-            GameRow(
-                selectedColors = selectedColors,
-                feedbackColors = feedbackColors,
-                isCheckEnabled = isCheckEnabled,
-                onSelectColorClick = { index ->
-                    selectedColors = selectNextAvailableColor(
-                        availableColors,
-                        selectedColors,
-                        index
-                    )
-                },
-                onCheckClick = {
-                    feedbackColors = checkColors(selectedColors, correctColors, Color.Gray)
+            AnimatedVisibility(
+                visible = isNewRowVisible,
+                enter = expandVertically(
+                    expandFrom = Alignment.Top,
+                    animationSpec = tween(durationMillis = 300) // Czas trwania animacji
+                )
+            ) {
+                GameRow(
+                    selectedColors = selectedColors,
+                    feedbackColors = feedbackColors,
+                    isCheckEnabled = isCheckEnabled,
+                    onSelectColorClick = { index ->
+                        selectedColors = selectNextAvailableColor(
+                            availableColors,
+                            selectedColors,
+                            index
+                        )
+                    },
+                    onCheckClick = {
+                        feedbackColors = checkColors(selectedColors, correctColors, Color.Gray)
 
-                    if (feedbackColors.all { it == Color.Red }) {
-                        isGameFinished = true
-                        attempts.add(Pair(selectedColors, feedbackColors))
-                    } else {
-                        attempts.add(Pair(selectedColors, feedbackColors))
-                        isResetting = true
+                        if (feedbackColors.all { it == Color.Red }) {
+                            isGameFinished = true
+                            attempts.add(Pair(selectedColors, feedbackColors))
+                        } else {
+                            attempts.add(Pair(selectedColors, feedbackColors))
+                            isResetting = true
+                        }
                     }
-                }
-            )
+                )
+            }
+        }
+
+        // Ustawienie widoczności nowego wiersza
+        LaunchedEffect(isResetting) {
+            if (!isResetting) {
+                isNewRowVisible = true // Pokaż nowy wiersz
+            } else {
+                isNewRowVisible = false // Ukryj w trakcie resetu
+            }
         }
 
         // Reset stanu po opóźnieniu
         if (isResetting) {
             LaunchedEffect(Unit) {
-                kotlinx.coroutines.delay(200) // Opóźnienie 200 ms
+                delay(200) // Opóźnienie 200 ms
                 selectedColors = List(4) { Color.White }
                 feedbackColors = List(4) { Color.Gray }
                 isResetting = false
