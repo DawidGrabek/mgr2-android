@@ -1,5 +1,12 @@
 package com.example.mindand
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.repeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,18 +41,19 @@ fun GameRow(
         }
 
         // Przycisk sprawdzający próbę
-        IconButton(
-            onClick = onCheckClick,
-            enabled = isCheckEnabled,
-            modifier = Modifier
-                .size(50.dp)
-                .clip(CircleShape)
-                .background(Color.LightGray)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_check_24),
-                contentDescription = "Check"
-            )
+        AnimatedVisibility(visible = isCheckEnabled) {
+            IconButton(
+                onClick = onCheckClick,
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .background(Color.LightGray)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_check_24),
+                    contentDescription = "Check"
+                )
+            }
         }
 
         // Wyświetlanie kółek informacyjnych (feedback) w układzie 2x2
@@ -56,14 +64,27 @@ fun GameRow(
 // Funkcja FeedbackCircles w układzie 2x2
 @Composable
 fun FeedbackCircles(feedbackColors: List<Color>) {
+    // Przechowujemy animowane kolory kółek
+    val animatedColors = remember { mutableStateListOf(Color.Gray, Color.Gray, Color.Gray, Color.Gray) }
+
+    // Animujemy każde kółko po kolei z opóźnieniem
+    LaunchedEffect(feedbackColors) {
+        feedbackColors.forEachIndexed { index, color ->
+            kotlinx.coroutines.delay(index * 200L) // 200 ms opóźnienia dla każdego kółka
+            animatedColors[index] = color // Zmiana koloru kółka
+        }
+    }
+
     Column {
         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            SmallCircle(feedbackColors[0])
-            SmallCircle(feedbackColors[1])
+            animatedColors.subList(0, 2).forEach { color ->
+                SmallCircle(color)
+            }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            SmallCircle(feedbackColors[2])
-            SmallCircle(feedbackColors[3])
+            animatedColors.subList(2, 4).forEach { color ->
+                SmallCircle(color)
+            }
         }
     }
 }
@@ -74,6 +95,11 @@ fun CircularButton(
     color: Color,
     onClick: () -> Unit
 ) {
+    val animatedColor by animateColorAsState(
+        targetValue = color,
+        animationSpec = tween(durationMillis = 500, easing = EaseInOut)
+    )
+
     Button(
         onClick = onClick,
         modifier = Modifier
@@ -81,21 +107,28 @@ fun CircularButton(
             .background(MaterialTheme.colorScheme.background),
         border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
         colors = ButtonDefaults.buttonColors(
-            containerColor = color,
+            containerColor = animatedColor,
             contentColor = MaterialTheme.colorScheme.onBackground
         ),
         shape = CircleShape
     ) {}
 }
 
+
 // Funkcja SmallCircle (kółko informacyjne)
 @Composable
 fun SmallCircle(color: Color) {
+    val animatedColor by animateColorAsState(
+        targetValue = color,
+        animationSpec = tween(durationMillis = 300)
+    )
+
     Box(
         modifier = Modifier
             .size(20.dp)
             .clip(CircleShape)
-            .background(color)
+            .background(animatedColor)
             .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape)
     )
 }
+

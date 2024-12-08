@@ -1,5 +1,6 @@
 package com.example.mindand
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -8,11 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 @Composable
 fun GameScreen(navController: NavHostController, numOfColors: Int) {
-    // Generujemy listę kolorów w oparciu o liczbę `numOfColors`
     val baseColors = listOf(Color.Red, Color.Blue, Color.Green, Color.Magenta, Color.Yellow)
     val availableColors by remember {
         mutableStateOf(baseColors + List(numOfColors - baseColors.size) {
@@ -29,11 +30,9 @@ fun GameScreen(navController: NavHostController, numOfColors: Int) {
     var feedbackColors by remember { mutableStateOf(List(4) { Color.Gray }) }
     val isCheckEnabled = selectedColors.none { it == Color.White }
 
-    // Wzór generowany raz na początku gry
     val correctColors by remember { mutableStateOf(selectRandomColors(availableColors)) }
-
-    // Flaga określająca, czy gra jest zakończona
     var isGameFinished by remember { mutableStateOf(false) }
+    var isResetting by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -42,7 +41,6 @@ fun GameScreen(navController: NavHostController, numOfColors: Int) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Nagłówek z liczbą prób
         Text(text = "Your score: ${attempts.size}", style = MaterialTheme.typography.displayLarge)
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -58,34 +56,43 @@ fun GameScreen(navController: NavHostController, numOfColors: Int) {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        // Wyświetlanie aktualnej próby, jeśli gra nie jest zakończona
-        if (!isGameFinished) {
+        // Wyświetlanie aktualnej próby
+        if (!isGameFinished && !isResetting) {
             GameRow(
                 selectedColors = selectedColors,
                 feedbackColors = feedbackColors,
                 isCheckEnabled = isCheckEnabled,
                 onSelectColorClick = { index ->
-                    selectedColors = selectNextAvailableColor(availableColors, selectedColors, index)
+                    selectedColors = selectNextAvailableColor(
+                        availableColors,
+                        selectedColors,
+                        index
+                    )
                 },
                 onCheckClick = {
                     feedbackColors = checkColors(selectedColors, correctColors, Color.Gray)
 
-                    // Jeśli wszystkie kolory feedbacku są czerwone, gra jest wygrana
                     if (feedbackColors.all { it == Color.Red }) {
                         isGameFinished = true
-                        // Dodaj wygrywającą próbę do listy
                         attempts.add(Pair(selectedColors, feedbackColors))
                     } else {
-                        // Dodanie aktualnej próby do listy prób
                         attempts.add(Pair(selectedColors, feedbackColors))
-                        selectedColors = List(4) { Color.White }
-                        feedbackColors = List(4) { Color.Gray }
+                        isResetting = true
                     }
                 }
             )
         }
 
-        // Wyświetlenie przycisku "Zakończ grę" po ostatnim wierszu, gdy gra jest zakończona
+        // Reset stanu po opóźnieniu
+        if (isResetting) {
+            LaunchedEffect(Unit) {
+                kotlinx.coroutines.delay(200) // Opóźnienie 200 ms
+                selectedColors = List(4) { Color.White }
+                feedbackColors = List(4) { Color.Gray }
+                isResetting = false
+            }
+        }
+
         if (isGameFinished) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
@@ -95,14 +102,11 @@ fun GameScreen(navController: NavHostController, numOfColors: Int) {
             }) {
                 Text("Finish Game")
             }
-
         }
     }
 }
 
-
-
-// Funkcja: Wybierz następny dostępny kolor
+// Funkcja uniemożliwiająca wybranie tego samego koloru
 fun selectNextAvailableColor(
     availableColors: List<Color>,
     selectedColors: List<Color>,
@@ -111,7 +115,6 @@ fun selectNextAvailableColor(
     val newColors = selectedColors.toMutableList()
     var nextColorIndex = (availableColors.indexOf(selectedColors[buttonIndex]) + 1) % availableColors.size
 
-    // Znajdź następny kolor, który nie jest już wybrany
     while (availableColors[nextColorIndex] in selectedColors) {
         nextColorIndex = (nextColorIndex + 1) % availableColors.size
     }
@@ -123,6 +126,7 @@ fun selectNextAvailableColor(
 fun selectRandomColors(availableColors: List<Color>): List<Color> {
     return availableColors.shuffled(Random.Default).take(4)
 }
+
 
 // Funkcja: Porównaj kolory i zwróć informację zwrotną
 fun checkColors(selectedColors: List<Color>, correctColors: List<Color>, colorNotFound: Color): List<Color> {

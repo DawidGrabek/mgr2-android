@@ -8,6 +8,14 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -69,7 +77,21 @@ fun MyApp() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.StartScreen.path) {
-        composable(Screen.StartScreen.path) { StartScreen(navController) }
+        composable(
+            Screen.StartScreen.path,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(1000, easing = EaseIn)
+                ) + fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(1000, easing = EaseOut)
+                ) + fadeOut()
+            }
+        ) { StartScreen(navController) }
 
         composable(
             "profileScreen/{name}/{numOfColors}?imageUri={imageUri}",
@@ -77,7 +99,19 @@ fun MyApp() {
                 navArgument("name") { type = NavType.StringType },
                 navArgument("numOfColors") { type = NavType.IntType },
                 navArgument("imageUri") { type = NavType.StringType; defaultValue = "" }
-            )
+            ),
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(1000, easing = EaseIn)
+                ) + fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(1000, easing = EaseOut)
+                ) + fadeOut()
+            }
         ) { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
             val imageUri = backStackEntry.arguments?.getString("imageUri")
@@ -89,7 +123,19 @@ fun MyApp() {
             "gameScreen/{numOfColors}",
             arguments = listOf(
                 navArgument("numOfColors") { type = NavType.IntType }
-            )
+            ),
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(1000, easing = EaseIn)
+                ) + fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(1000, easing = EaseOut)
+                ) + fadeOut()
+            }
         ) { backStackEntry ->
             val numOfColors = backStackEntry.arguments?.getInt("numOfColors") ?: 5
             GameScreen(navController = navController, numOfColors = numOfColors)
@@ -102,7 +148,19 @@ fun MyApp() {
                 navArgument("attemptsCount") { type = NavType.IntType },
                 navArgument("isGameWon") { type = NavType.BoolType },
                 navArgument("numOfColors") { type = NavType.IntType }
-            )
+            ),
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(1000, easing = EaseIn)
+                ) + fadeIn()
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(1000, easing = EaseOut)
+                ) + fadeOut()
+            }
         ) { backStackEntry ->
             val attemptsCount = backStackEntry.arguments?.getInt("attemptsCount") ?: 0
             val isGameWon = backStackEntry.arguments?.getBoolean("isGameWon") ?: false
