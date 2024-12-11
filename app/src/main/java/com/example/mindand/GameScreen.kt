@@ -14,9 +14,18 @@ import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 import androidx.compose.animation.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mindand.view_models.GameViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun GameScreen(navController: NavHostController, numOfColors: Int) {
+fun GameScreen(
+    navController: NavHostController,
+    numOfColors: Int,
+    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    ) {
+    val coroutineScope = rememberCoroutineScope()
+
     val baseColors = listOf(Color.Red, Color.Blue, Color.Green, Color.Magenta, Color.Yellow)
     val availableColors by remember {
         mutableStateOf(baseColors + List(numOfColors - baseColors.size) {
@@ -117,6 +126,10 @@ fun GameScreen(navController: NavHostController, numOfColors: Int) {
         if (isGameFinished) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
+                viewModel.score.longValue = attempts.size.toLong()
+                coroutineScope.launch {
+                    viewModel.savePlayerScore()
+                }
                 navController.navigate(
                     "resultsScreen/${attempts.size}/${feedbackColors.all { it == Color.Red }}/$numOfColors"
                 )

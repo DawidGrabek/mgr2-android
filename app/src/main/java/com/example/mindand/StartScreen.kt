@@ -19,11 +19,19 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.mindand.view_models.ProfileViewModel
+import kotlinx.coroutines.launch
 import java.net.URLEncoder
 
 @Composable
-fun StartScreen(navController: NavHostController) {
+fun StartScreen(
+    navController: NavHostController,
+    viewModel: ProfileViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    ) {
+    val coroutineScope = rememberCoroutineScope()
+
     val name = rememberSaveable { mutableStateOf("") }
     val email = rememberSaveable { mutableStateOf("") }
     val numOfColors = rememberSaveable { mutableStateOf("") }
@@ -121,6 +129,13 @@ fun StartScreen(navController: NavHostController) {
 
         Button(
             onClick = {
+                viewModel.name.value = name.value
+                viewModel.email.value = email.value
+                coroutineScope.launch {
+                    viewModel.savePlayer()
+                }
+
+                numOfColors.value
                 val encodedUri = profileImageUri.value?.let { Uri.encode(it.toString()) }
                 navController.navigate(
                     "profileScreen/${name.value}/${numOfColors.value}" +

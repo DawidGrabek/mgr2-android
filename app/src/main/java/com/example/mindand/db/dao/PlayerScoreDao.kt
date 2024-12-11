@@ -10,6 +10,7 @@ interface PlayerScoreDao {
     @Query(
         "SELECT " +
                 "players.playerId AS playerId," +
+                "players.email AS email," +
                 "players.name AS playerName," +
                 "scores.id AS scoreId, " +
                 "scores.score AS score " +
