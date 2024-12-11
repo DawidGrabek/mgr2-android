@@ -1,16 +1,14 @@
 package com.example.mindand
 
 import android.app.Application
+import com.example.mindand.containers.AppContainer
+import com.example.mindand.containers.AppDataContainer
 
 
 class MasterAndApplication : Application() {
-    lateinit var playerRepository: PlayerRepository
-    lateinit var scoreRepository: ScoreRepository
-
+    lateinit var container: AppContainer
     override fun onCreate() {
         super.onCreate()
-        val database = MasterAndDatabase.getDatabase(this)
-        playerRepository = PlayerRepository(database.playerDao())
-        scoreRepository = ScoreRepository(database.scoreDao())
+        container = AppDataContainer(this)
     }
 }
