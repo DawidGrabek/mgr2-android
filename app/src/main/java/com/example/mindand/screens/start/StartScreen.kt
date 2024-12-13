@@ -18,16 +18,19 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+//import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.mindand.providers.AppViewModelProvider
 import com.example.mindand.view_models.ProfileViewModel
+//import com.example.mindand.providers.AppViewModelProvider
+//import com.example.mindand.view_models.ProfileViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun StartScreen(
     navController: NavHostController,
-    viewModel: ProfileViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>()
+//    viewModel: ProfileViewModel = viewModel(factory = AppViewModelProvider.Factory)
     ) {
     val coroutineScope = rememberCoroutineScope()
 

@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import com.example.mindand.db.entities.Score
 import com.example.mindand.db.repositories.PlayersRepository
 import com.example.mindand.db.repositories.ScoresRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
-class GameViewModel (
+@HiltViewModel
+class GameViewModel @Inject constructor(
     playersRepository: PlayersRepository,
     private val scoresRepository: ScoresRepository
 ) : ViewModel() {

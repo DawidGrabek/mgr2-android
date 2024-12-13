@@ -14,8 +14,9 @@ import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 import androidx.compose.animation.*
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.mindand.providers.AppViewModelProvider
+import androidx.hilt.navigation.compose.hiltViewModel
+//import androidx.lifecycle.viewmodel.compose.viewModel
+//import com.example.mindand.providers.AppViewModelProvider
 import com.example.mindand.view_models.GameViewModel
 import kotlinx.coroutines.launch
 
@@ -23,7 +24,8 @@ import kotlinx.coroutines.launch
 fun GameScreen(
     navController: NavHostController,
     numOfColors: Int,
-    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: GameViewModel = hiltViewModel<GameViewModel>()
+//    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory)
     ) {
     val coroutineScope = rememberCoroutineScope()
 

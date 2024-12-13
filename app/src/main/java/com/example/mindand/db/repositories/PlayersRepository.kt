@@ -2,7 +2,13 @@ package com.example.mindand.db.repositories
 
 import com.example.mindand.db.dao.PlayerDao
 import com.example.mindand.db.entities.Player
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
 interface PlayersRepository {
     fun getAllPlayersStream(): Flow<List<Player>>
@@ -16,7 +22,8 @@ interface PlayersRepository {
     fun getCurrentPlayerId(): Long
 }
 
-class PlayersRepositoryImpl(private val playerDao: PlayerDao) : PlayersRepository {
+@Singleton
+class PlayersRepositoryImpl @Inject constructor(private val playerDao: PlayerDao) : PlayersRepository {
     private var currentPlayerId: Long = -1 // Domyślna wartość, gdy brak zalogowanego gracza
 
     override fun getAllPlayersStream(): Flow<List<Player>> =
@@ -43,4 +50,11 @@ class PlayersRepositoryImpl(private val playerDao: PlayerDao) : PlayersRepositor
     }
 
     override fun getCurrentPlayerId(): Long = currentPlayerId
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+abstract class PlayersModule {
+    @Binds
+    abstract fun bindPlayersRepository(playersRepositoryImpl: PlayersRepositoryImpl): PlayersRepository
 }

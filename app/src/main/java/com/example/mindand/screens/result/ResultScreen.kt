@@ -11,12 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.mindand.db.entities.PlayerWithScore
 import com.example.mindand.view_models.ResultsViewModel
 import androidx.compose.foundation.lazy.items
-import com.example.mindand.providers.AppViewModelProvider
+import androidx.hilt.navigation.compose.hiltViewModel
+
+//import com.example.mindand.providers.AppViewModelProvider
 
 @Composable
 fun ResultsScreen(
@@ -24,7 +25,8 @@ fun ResultsScreen(
     attemptsCount: Int,
     isGameWon: Boolean,
     numOfColors: Int,
-    viewModel: ResultsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: ResultsViewModel = hiltViewModel<ResultsViewModel>()
+//    viewModel: ResultsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val playersFlow = viewModel.loadPlayerScores()
     var playerScores = remember { mutableStateOf(emptyList<PlayerWithScore>()) }
