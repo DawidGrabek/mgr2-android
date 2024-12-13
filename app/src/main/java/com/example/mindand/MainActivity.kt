@@ -16,6 +16,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mindand.screens.game.GameScreen
+import com.example.mindand.screens.profile.ProfileScreen
+import com.example.mindand.screens.result.ResultsScreen
+import com.example.mindand.screens.start.StartScreen
 
 import com.example.mindand.ui.theme.MindAndTheme
 
@@ -34,9 +38,9 @@ class MainActivity : ComponentActivity() {
 fun MyApp() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.StartScreen.path) {
+    NavHost(navController = navController, startDestination = "StartScreen") {
         composable(
-            Screen.StartScreen.path,
+            "StartScreen",
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Right,

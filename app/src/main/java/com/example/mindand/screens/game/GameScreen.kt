@@ -1,4 +1,4 @@
-package com.example.mindand
+package com.example.mindand.screens.game
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -15,6 +15,7 @@ import kotlin.random.Random
 
 import androidx.compose.animation.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mindand.providers.AppViewModelProvider
 import com.example.mindand.view_models.GameViewModel
 import kotlinx.coroutines.launch
 

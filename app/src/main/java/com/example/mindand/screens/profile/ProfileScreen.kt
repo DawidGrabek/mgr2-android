@@ -1,4 +1,4 @@
-package com.example.mindand
+package com.example.mindand.screens.profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import com.example.mindand.R
 
 @Composable
 fun ProfileScreen(navController: NavHostController, name: String, imageUri: String?, numOfColors: Int?) {

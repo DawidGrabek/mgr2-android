@@ -1,4 +1,4 @@
-package com.example.mindand
+package com.example.mindand.screens.start
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.example.mindand.R
 
 @Composable
 fun ProfileImageWithPicker(

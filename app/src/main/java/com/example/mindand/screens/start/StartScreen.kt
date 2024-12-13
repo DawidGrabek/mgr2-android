@@ -1,8 +1,7 @@
-package com.example.mindand
+package com.example.mindand.screens.start
 
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import android.util.Patterns
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -21,9 +20,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.mindand.providers.AppViewModelProvider
 import com.example.mindand.view_models.ProfileViewModel
 import kotlinx.coroutines.launch
-import java.net.URLEncoder
 
 @Composable
 fun StartScreen(
@@ -100,13 +99,13 @@ fun StartScreen(
             value = email.value,
             onValueChange = {
                 email.value = it
-                emailError.value = it.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()
+                emailError.value = it.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(it).matches()
             },
             label = "Enter Email",
             keyboardType = KeyboardOptions(keyboardType = KeyboardType.Email),
             isError = emailError.value,
             errorMessage = "Invalid email address",
-            validate = { it.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches() }
+            validate = { it.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(it).matches() }
         )
 
         Spacer(modifier = Modifier.height(16.dp))

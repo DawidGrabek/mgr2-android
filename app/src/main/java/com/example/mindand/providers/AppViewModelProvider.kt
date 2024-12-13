@@ -1,9 +1,10 @@
-package com.example.mindand
+package com.example.mindand.providers
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.mindand.MasterAndApplication
 import com.example.mindand.view_models.GameViewModel
 import com.example.mindand.view_models.ProfileViewModel
 import com.example.mindand.view_models.ResultsViewModel
