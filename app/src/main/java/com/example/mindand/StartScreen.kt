@@ -46,14 +46,14 @@ fun StartScreen(
     val isNextButtonEnabled = isFormValid && name.value.isNotEmpty() && email.value.isNotEmpty() && numOfColors.value.isNotEmpty()
 
     // Animacja
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "infiniteScale")
     val scale by infiniteTransition.animateFloat(
         initialValue = 1f,
         targetValue = 1.2f,
         animationSpec = infiniteRepeatable(
             tween(1000),
             RepeatMode.Reverse
-        )
+        ), label = "infiniteScale"
     )
 
     Column(
@@ -115,13 +115,13 @@ fun StartScreen(
             value = numOfColors.value,
             onValueChange = {
                 numOfColors.value = it
-                numOfColorsError.value = it.toIntOrNull()?.let { num -> num !in 5..9 } ?: true
+                numOfColorsError.value = it.toIntOrNull()?.let { num -> num !in 5..10 } ?: true
             },
-            label = "Enter number of colors (5-9)",
+            label = "Enter number of colors (5-10)",
             keyboardType = KeyboardOptions(keyboardType = KeyboardType.Number),
             isError = numOfColorsError.value,
-            errorMessage = "Must be between 5 and 9",
-            validate = { it.toIntOrNull()?.let { num -> num in 5..9 } ?: false }
+            errorMessage = "Must be between 5 and 10",
+            validate = { it.toIntOrNull()?.let { num -> num in 5..10 } ?: false }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
